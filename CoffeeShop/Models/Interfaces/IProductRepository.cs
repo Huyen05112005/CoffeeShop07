@@ -1,4 +1,7 @@
-﻿namespace CoffeeShop.Models.Interfaces
+﻿using Microsoft.AspNetCore.Mvc;
+using CoffeeShop.Models.Services;
+
+namespace CoffeeShop.Models.Interfaces
 {
     public interface IProductRepository
     {
