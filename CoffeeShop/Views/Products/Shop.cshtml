@@ -1,0 +1,16 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<CoffeeShop.Models.Product>
+<!DOCTYPE html>
+<head>
+	<title>Coffee Shop</title>
+</head>
+<body>
+    <h1>Shop Coffee</h1>
+
+    @foreach (var item in Model)
+    {
+            <img width="100" src="@item.ImageUrl"/>
+            <h3>@item.Name</h3>
+            <p>@item.Price.ToString("C")</p>
+    }
+</body>
