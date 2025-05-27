@@ -17,6 +17,7 @@ builder.Services.AddDbContext<CoffeeShopDbContext>(option => option.UseSqlServer
 //session
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IShoppingCartRepository>(sp => ShoppingCartRepository.GetCart(sp));
 
 var app = builder.Build();
 app.UseSession();

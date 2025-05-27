@@ -10,45 +10,57 @@ namespace CoffeeShop.Models.Services
     {
         private readonly CoffeeShopDbContext dbContext;
 
-        public ShoppingCartRepository(CoffeeShopDbContext dbContext)
+        public ShoppingCartRepository(CoffeeShopDbContext dbContext, IHttpContextAccessor httpContextAccessor)
         {
             this.dbContext = dbContext;
+            this._httpContextAccessor = httpContextAccessor;
         }
+
 
         public List<ShoppingCartItem>? ShoppingCartItems { get; set; }
         public string? ShoppingCartId { get; set; }
 
         public static ShoppingCartRepository GetCart(IServiceProvider services)
         {
-            ISession? session = services.GetRequiredService<IHttpContextAccessor>()?.HttpContext?.Session;
+            var session = services.GetRequiredService<IHttpContextAccessor>()?.HttpContext?.Session;
             var context = services.GetService<CoffeeShopDbContext>() ?? throw new Exception("DB context null");
+            var httpContextAccessor = services.GetService<IHttpContextAccessor>() ?? throw new Exception("HttpContextAccessor is null");
 
             string cartId = session?.GetString("CartId") ?? Guid.NewGuid().ToString();
             session?.SetString("CartId", cartId);
 
-            return new ShoppingCartRepository(context) { ShoppingCartId = cartId };
+            return new ShoppingCartRepository(context, httpContextAccessor)
+            {
+                ShoppingCartId = cartId
+            };
         }
+
 
         public void AddToCart(Product product)
         {
-            var shoppingCartItem = dbContext.ShoppingCartItems.FirstOrDefault(s =>
-            s.Product.Id == product.Id && s.ShoppingCartId == ShoppingCartId);
-            if (shoppingCartItem == null)
+            var cartItem = dbContext.ShoppingCartItems
+                .FirstOrDefault(i => i.Product.Id == product.Id && i.ShoppingCartId == ShoppingCartId);
+
+            if (cartItem == null)
             {
-                shoppingCartItem = new ShoppingCartItem
+                cartItem = new ShoppingCartItem
                 {
                     ShoppingCartId = ShoppingCartId,
                     Product = product,
-                    Qty = 1,
+                    Qty = 1
                 };
-                dbContext.ShoppingCartItems.Add(shoppingCartItem);
+                dbContext.ShoppingCartItems.Add(cartItem);
             }
             else
             {
-                shoppingCartItem.Qty++;
+                cartItem.Qty++;
             }
+
             dbContext.SaveChanges();
+            UpdateCartCount();
         }
+
+
 
         public int RemoveFromCart(Product product)
         {
@@ -108,8 +120,10 @@ namespace CoffeeShop.Models.Services
                 .Where(i => i.ShoppingCartId == ShoppingCartId)
                 .Sum(i => i.Qty);
 
-            var httpContextAccessor = new HttpContextAccessor();
-            httpContextAccessor.HttpContext?.Session.SetInt32("CartCount", cartCount);
+            _httpContextAccessor.HttpContext?.Session.SetInt32("CartCount", cartCount);
         }
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+
     }
 }
