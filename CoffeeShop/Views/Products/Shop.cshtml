@@ -3,39 +3,84 @@
 <!DOCTYPE html>
 <html>
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Product</title>
+    <link rel="shortcut icon" href="~/assets/images/coffee-icon-sign-symbol-design-free-png.webp" type="image/x-icon">
+    <link rel="stylesheet" href="~/assets/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/theme/css/style.css" />
+    <link rel="stylesheet" href="~/assets/mobirise/css/mbr-additional.css" />
+</head>
+
 <body>
-    <section data-bs-version="5.1" class="info3 cid-tsEY2vwh5a mbr-parallax-background" id="info3-b">
+    <!-- Navbar -->
+    <section class="menu menu3" id="menu3-0">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <img src="~/assets/images/coffee-icon-sign-symbol-design-free-png.webp" alt="Coffee Shop" style="height: 3rem;" />
+                </a>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Products" asp-action="Shop">Shop</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Contact" asp-action="AddContact">Contact</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="ShoppingCart" asp-action="Index">
+                                <span class="mobi-mbri mobi-mbri-shopping-bag mbr-iconfont mbr-iconfont-btn">
+                                    <small>(@Context.Session.GetInt32("CartCount") ?? 0)</small>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </section>
 
-        <div class="mbr-overlay"
-             style="opacity:0.9; background-image: url('https://images.unsplash.com/photo-1580933073521-dc49ac0d4e6a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2000&q=80');">
-        </div>
-
-        <div class="mbr-overlay" style="opacity: 0.7; background-color: rgb(0, 0, 0);"></div>
-
-
+    <!-- Banner -->
+    <section class="text-center text-white py-5" style="background-image: url('https://images.unsplash.com/photo-1580933073521-dc49ac0d4e6a'); background-size: cover;">
         <div class="container">
-            <div class="row justify-content-center">
-                <div class="card col-12 col-lg-10">
-                    <div class="card-wrapper">
-                        <div class="card-box align-center">
-                            <h4 class="card-title mbr-fonts-style align-center mb-4 display-1">
-                                <strong>Shop</strong>
-                            </h4>
+            <h1 class="display-4 fw-bold">Shop</h1>
+            <p class="lead">The secret to a perfect cup, every time...</p>
+        </div>
+    </section>
+
+    <!-- Product Grid -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-12 col-md-6 col-lg-4 mb-4">
+                        <div class="card h-100">
+                            <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height:300px; object-fit:cover;" />
+                            <div class="card-body text-center">
+                                <h5 class="card-title">@item.Name</h5>
+                                <p class="card-text">@item.Price.ToString("C")</p>
+                                <a asp-controller="ShoppingCart"
+                                   asp-action="AddToShoppingCart"
+                                   asp-route-pId="@item.Id"
+                                   class="btn btn-primary">
+                                    <span class="mbrib-cart-add mbr-iconfont mbr-iconfont-btn"></span> Add to cart
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
             </div>
         </div>
     </section>
-    <section data-bs-version="5.1" class="content2 cid-tsEZVFGbrL" id="content2-g">
-        <div class="container">
-            <div class="mbr-section-head">
 
-                <h5 class="mbr-section-subtitle mbr-fonts-style align-center mb-0 mt-2 display-5">
-                    The secret to a
-                    perfect cup , every time...
-                </h5>
-            </div>
-            <partial name="_Product"></partial>
+    <!-- Footer -->
+    <footer class="text-center py-3">
+        <div class="container">
+            <p class="mb-0">&copy; 2025 - All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <script src="~/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -28,7 +29,10 @@
     <link rel="preload" as="style" href="~/assets/mobirise/css/mbr-additional.css">
     <link rel="stylesheet" href="~/assets/mobirise/css/mbr-additional.css" type="text/css">
 </head>
-
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var cartCount = HttpContextAccessor?.HttpContext?.Session.GetInt32("CartCount") ?? 0;
+}
 <body>
     @RenderBody()
     <script src="~/assets/bootstrap/js/bootstrap.bundle.min.js"></script>

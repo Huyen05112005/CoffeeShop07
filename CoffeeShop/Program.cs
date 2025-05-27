@@ -10,11 +10,16 @@ builder.Services.AddControllersWithViews();
 
 // Add code
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IShoppingCartRepository>(sp => ShoppingCartRepository.GetCart(sp));
 
-builder.Services.AddDbContext<CoffeeShopDbContext>(option =>
-option.UseSqlServer(builder.Configuration.GetConnectionString("CoffeeShopDbContextConnection")));
+builder.Services.AddDbContext<CoffeeShopDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("CoffeeShopDbContextConnection")));
+
+//session
+builder.Services.AddSession();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
+app.UseSession();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
