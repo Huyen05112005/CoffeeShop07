@@ -123,7 +123,5 @@ namespace CoffeeShop.Models.Services
             _httpContextAccessor.HttpContext?.Session.SetInt32("CartCount", cartCount);
         }
         private readonly IHttpContextAccessor _httpContextAccessor;
-
-
     }
 }
